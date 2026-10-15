@@ -11,7 +11,7 @@ import './styles.css';
 initializeStore();
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <HashRouter>
+    <HashRouter useTransitions={false}>
       <App />
     </HashRouter>
   </StrictMode>,

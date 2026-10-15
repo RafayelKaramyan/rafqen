@@ -82,8 +82,8 @@ export function Input({
   const generated = useId(),
     id = props.id ?? generated;
   return (
-    <label className="field" htmlFor={id}>
-      <span>{label}</span>
+    <div className="field">
+      <label htmlFor={id}>{label}</label>
       <input
         {...props}
         id={id}
@@ -95,7 +95,7 @@ export function Input({
           {error}
         </span>
       ) : null}
-    </label>
+    </div>
   );
 }
 export function Modal({

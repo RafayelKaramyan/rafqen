@@ -10,7 +10,7 @@ The unit tests cover validated configuration links, key-layout bounds/counts, va
 
 Browser execution and public-site verification are in progress for the first release.
 
-The repository includes nine browser scenarios in three profiles: desktop Chromium, desktop Firefox, and Pixel 7 emulation in Chromium. They exercise configuration links, saved builds, bag persistence, search/filter/sort/compare, the complete demo checkout, cross-tab changes, corrupt-storage recovery, reduced motion and keyboard interactions, route recovery, and optional 3D fallback.
+The repository includes ten browser scenarios in three profiles: desktop Chromium, desktop Firefox, and Pixel 7 emulation in Chromium. They exercise configuration links, saved builds, bag persistence, search/filter/sort/compare, the complete demo checkout, cross-tab changes, explicit re-review after a checkout change, corrupt-storage recovery, reduced motion and keyboard interactions, route recovery, and optional 3D fallback.
 
 Representative states are scanned with axe-core against WCAG 2 A/AA and WCAG 2.1 A/AA rules. Screenshots and Playwright traces are retained as workflow artifacts. A test file or configured workflow is not evidence of a passing run: use the repository's Actions results for the executed result.
 

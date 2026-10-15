@@ -152,7 +152,7 @@
     line-height: 1;
     letter-spacing: -0.075em;
     font-weight: 500;
-    color: #9ba28f;
+    color: #68745e;
   }
   .spec-strip {
     display: grid;
@@ -1126,7 +1126,7 @@
       display: none;
     }
     .mobile-menu {
-      display: inline-flex !important;
+      display: inline-flex;
     }
     .header-actions {
       gap: 10px;
@@ -2942,9 +2942,6 @@
     display: grid;
     place-items: center;
   }
-  .mobile-menu {
-    display: none !important;
-  }
   .page-wrap,
   .hero,
   .collection-section,
@@ -3151,6 +3148,9 @@
     flex-shrink: 0;
     border-radius: 50%;
   }
+  .mobile-menu {
+    display: none;
+  }
   .icon-button:not(:disabled):hover {
     background: #282c260d;
     color: var(--accent);
@@ -3175,7 +3175,8 @@
     gap: 9px;
     font-size: 12px;
   }
-  .field > span:first-child {
+  .field > span:first-child,
+  .field > label {
     font-weight: 600;
   }
   .field input,

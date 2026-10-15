@@ -41,6 +41,18 @@ async function settle(page: Page) {
   });
 }
 async function accessibility(page: Page) {
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    if (document.querySelector('dialog[open]')) return;
+    const original = scrollY;
+    for (let y = 0; y < document.documentElement.scrollHeight; y += innerHeight * 0.8) {
+      scrollTo(0, y);
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      );
+    }
+    scrollTo(0, original);
+  });
   await settle(page);
   expect(
     (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
@@ -184,6 +196,39 @@ test('synchronizes two tabs and does not resurrect a removed bag item', async ({
     await other.close();
   }
 });
+test('requires an explicit new review when another tab changes the checkout bag', async ({
+  page,
+  context,
+}) => {
+  await openBuild(page);
+  await addToBag(page);
+  await activate(page.getByRole('link', { name: 'Continue to demo checkout', exact: true }));
+  await activate(page.getByRole('button', { name: 'Use sample details', exact: true }));
+  await activate(page.getByRole('button', { name: 'Review your build', exact: true }));
+  await expect(page.getByRole('heading', { name: 'A final look.', exact: true })).toBeVisible();
+  const other = await context.newPage();
+  try {
+    await openBuild(other);
+    await addToBag(other);
+    await expect(page.getByRole('alert')).toContainText('changed after this review');
+    await expect(
+      page.getByRole('button', { name: 'Place demo order', exact: true }),
+    ).toBeDisabled();
+    await activate(page.getByRole('button', { name: 'Use updated selection', exact: true }));
+    await expect(page.getByRole('button', { name: 'Place demo order', exact: true })).toBeEnabled();
+    await activate(page.getByRole('button', { name: 'Place demo order', exact: true }));
+    await expect(
+      page.getByRole('heading', { name: 'Your studio is taking shape.', exact: true }),
+    ).toBeVisible();
+    const order = await page.evaluate(
+      () => JSON.parse(localStorage.getItem('rafqen:store:v1')!).orders[0],
+    );
+    expect(order.lines[0].quantity).toBe(2);
+    expect(order.total).toBe(45800);
+  } finally {
+    await other.close();
+  }
+});
 test('preserves invalid saved data until a confirmed reset', async ({ page }) => {
   await page.goto('./');
   await page.evaluate(() => localStorage.setItem('rafqen:store:v1', '{broken'));
@@ -205,7 +250,9 @@ test('preserves invalid saved data until a confirmed reset', async ({ page }) =>
     JSON.parse((await page.evaluate(() => localStorage.getItem('rafqen:store:v1')))!).cart,
   ).toEqual([]);
 });
-test('supports the studio layers, reduced motion and keyboard navigation', async ({ page }) => {
+test('supports the studio layers, reduced motion and keyboard navigation', async ({
+  page,
+}, info) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./#/studio');
   const tab = page.getByRole('tab').first();
@@ -220,11 +267,14 @@ test('supports the studio layers, reduced motion and keyboard navigation', async
   await expect(page.getByRole('main')).toBeFocused();
   expect(page.url()).toBe(url);
   const menu = page.getByRole('button', { name: 'Open navigation', exact: true });
-  if (await menu.isVisible()) {
+  if (info.project.name === 'mobile-chromium') {
+    await expect(menu).toBeVisible();
     await activate(menu);
     await expect(page.getByRole('dialog')).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(menu).toBeFocused();
+  } else {
+    await expect(menu).toBeHidden();
   }
 });
 test('provides safe recovery for unavailable builds and empty checkout', async ({ page }) => {

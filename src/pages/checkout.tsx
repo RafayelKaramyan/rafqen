@@ -23,7 +23,11 @@ export default function Checkout() {
     action = useAction();
   const [stage, setStage] = useState<1 | 2>(1),
     [form, setForm] = useState<Customer>(emptyCustomer),
-    [fields, setFields] = useState<Record<string, string>>({});
+    [fields, setFields] = useState<Record<string, string>>({}),
+    [reviewVersion, setReviewVersion] = useState<{
+      revision: number;
+      generation: string;
+    } | null>(null);
   const formElement = useRef<HTMLFormElement>(null),
     stageHeading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
@@ -42,6 +46,9 @@ export default function Checkout() {
     setForm((current) => ({ ...current, [key]: value }));
     setFields((current) => ({ ...current, [key]: '' }));
   }
+  const staleReview =
+    reviewVersion !== null &&
+    (reviewVersion.revision !== data.revision || reviewVersion.generation !== data.generation);
   function review() {
     const result = customerSchema.safeParse(form);
     if (!result.success) {
@@ -54,6 +61,7 @@ export default function Checkout() {
     }
     setForm(result.data);
     setFields({});
+    setReviewVersion({ revision: data.revision, generation: data.generation });
     setStage(2);
   }
   return (
@@ -252,16 +260,35 @@ export default function Checkout() {
                   emails are sent. Your contact and address fields are not saved.
                 </p>
               </div>
+              {staleReview ? (
+                <div className="review-update">
+                  <Notice>
+                    Your bag changed after this review. Check the updated selection and confirm it
+                    again.
+                  </Notice>
+                  <Button
+                    variant="outline"
+                    loading={action.pending}
+                    onClick={() =>
+                      void action.run(async () => {
+                        setReviewVersion({ revision: data.revision, generation: data.generation });
+                      })
+                    }
+                  >
+                    Use updated selection
+                  </Button>
+                </div>
+              ) : null}
               {action.error ? <Notice>{action.error}</Notice> : null}
               <Button
                 loading={action.pending}
+                disabled={staleReview || reviewVersion === null}
                 onClick={() =>
                   void action.run(async () => {
+                    if (!reviewVersion)
+                      throw new Error('Review your build before placing an order.');
                     const order = await updateStore((current) => {
-                      const result = checkout(current, form, {
-                        revision: data.revision,
-                        generation: data.generation,
-                      });
+                      const result = checkout(current, form, reviewVersion);
                       return { state: result.state, value: result.order };
                     });
                     navigate(`/order/${order.id}`, { replace: true });

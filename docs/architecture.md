@@ -6,6 +6,8 @@ A configuration contains only four identifiers: model, finish, caps, and switche
 
 Money stays in integer cents through discount rounding, shipping thresholds, and totals. The shipping threshold is evaluated after the discount. Quantity changes apply a delta to the latest persisted state, so an open tab cannot silently overwrite a newer quantity with an old absolute value.
 
+Router transitions are disabled for this small static application: native radios and filters write directly to the configuration URL and must commit synchronously with the input event. Deferring those navigations can restore an old controlled radio value or let a fast follow-up filter read stale query parameters. The optional 3D view has its own Suspense boundary.
+
 ## Persistence and checkout
 
 `useSyncExternalStore` connects React to a small external store. Each mutation reads the current storage value, applies a pure domain operation, validates the result, and persists before notifying subscribers or reporting success. Storage exceptions are shown to the visitor; a failed write does not produce a successful checkout.
