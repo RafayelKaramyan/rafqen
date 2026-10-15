@@ -8,11 +8,17 @@ The unit tests cover validated configuration links, key-layout bounds/counts, va
 
 ## Browser verification
 
-Browser execution and public-site verification are in progress for the first release.
+Release verification completed on 16 October 2026 (Asia/Yerevan).
+
+- Tested application commit: `aa81820f8d67a1143cbc3a919b2ae258b4f20664`.
+- Passing verification and deployment: [run 38819256088](https://github.com/RafayelKaramyan/rafqen/actions/runs/38819256088).
+- Executed result: 21 unit tests and all 30 browser scenarios passed. TypeScript, ESLint, formatting and the production build passed in the same run.
+- Public demo: [rafayelkaramyan.github.io/rafqen](https://rafayelkaramyan.github.io/rafqen/).
+- Live browser review verified Copper → Signal → Silent configuration at $294, saving a build, adding it to the bag, applying STUDIO10, a $264.60 demo checkout, and the completed receipt surviving a reload.
 
 The repository includes ten browser scenarios in three profiles: desktop Chromium, desktop Firefox, and Pixel 7 emulation in Chromium. They exercise configuration links, saved builds, bag persistence, search/filter/sort/compare, the complete demo checkout, cross-tab changes, explicit re-review after a checkout change, corrupt-storage recovery, reduced motion and keyboard interactions, route recovery, and optional 3D fallback.
 
-Representative states are scanned with axe-core against WCAG 2 A/AA and WCAG 2.1 A/AA rules. Screenshots and Playwright traces are retained as workflow artifacts. A test file or configured workflow is not evidence of a passing run: use the repository's Actions results for the executed result.
+Representative states were scanned with axe-core against WCAG 2 A/AA and WCAG 2.1 A/AA rules, with no detected violations in those scans. Page scrolling reveals animated sections before the scan; dialogs are checked in their modal state. Screenshots and Playwright traces are retained as workflow artifacts. Use the linked Actions result for the executed evidence.
 
 ## Limits
 

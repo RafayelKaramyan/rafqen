@@ -2,6 +2,8 @@
 
 An original keyboard storefront built with React and TypeScript. Configure a keyboard, compare layouts, save a build, and take it through a complete demonstration checkout.
 
+**[Open the live demo](https://rafayelkaramyan.github.io/rafqen/)** · [Verification workflow](https://github.com/RafayelKaramyan/rafqen/actions/workflows/verify.yml)
+
 **Portfolio project by [Rafayel Karamyan](https://github.com/RafayelKaramyan).** The brand, products, specifications, prices, and shipping options are fictional. No payment is collected and no order is fulfilled.
 
 ## Explore the experience
@@ -32,6 +34,8 @@ npm run test:e2e    # Production-build browser tests; run build first
 ```
 
 The `Verify and publish` workflow checks the source, builds it, runs browser scenarios in Chromium, Firefox, and mobile Chromium, and publishes the resulting build to GitHub Pages only after verification succeeds. Browser reports and screenshots are retained as workflow artifacts.
+
+The release passed **21 unit tests and 30 browser scenarios**, including representative axe accessibility scans. [Verified run and scope](docs/validation.md).
 
 ## Design and engineering
 
