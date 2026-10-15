@@ -119,14 +119,15 @@ export function KeyboardIllustration({
           );
         })}
         <rect x={w - 57} y={h - 3} width="28" height="2" rx="1" fill={colors.accent} />
+        <rect x="7" y={h + 9} width="124" height="12" rx="2" fill="#e8e3d9" />
         <text
           x="11"
           y={h + 17}
           fontFamily="monospace"
-          fontSize="5"
-          letterSpacing="1.5"
+          fontSize="6"
+          letterSpacing="1.1"
           fill="#171a18"
-          opacity=".6"
+          opacity="1"
         >
           RAFQEN / STUDIO SERIES
         </text>
